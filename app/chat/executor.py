@@ -13,8 +13,20 @@ def resolve(date_text:str,time_text:str="00:00"):
         settings={"RELATIVE_BASE": now_local(),"PREFER_DATES_FROM":"future"},
     )
 
+def missing_fields(args:dict,required:tuple)-> list:
+    return [k for k in required if not args.get(k)]
+
 def run_tool(name:str,args:dict, db, user)-> dict:
+    print(f"TOOL CALL: {name} {args}")
+
     if name=="create_event":
+        missing=missing_fields(args,("title","date","time"))
+        if missing:
+            return{
+                "status":"error",
+                "message":f"Missing required fields: {','.join(missing)}."
+                            "Cakk create_event again with title, date and time"
+            }
         start=resolve(args["date"],args["time"])
         if start is None:
             return {"status":"error","message":f"Couldn't understand the date '{args['date']}'"}
@@ -34,6 +46,9 @@ def run_tool(name:str,args:dict, db, user)-> dict:
         return {"status": "created", "id": event.id, "title":event.title, "start": event.start_time.isoformat()}
 
     if name=="list_events":
+        missing=missing_fields(args, ("date",))
+        if missing:
+            return {"status":"error","message": "Missing required field"}
         day=resolve(args["date"])
         if day is None:
             return {"status":"error", "message": f"Couldnt understand the date '{args['date']}'"}

@@ -4,7 +4,7 @@ TOOLS=[
         "function":{
             "name": "create_event",
             "description": "Create a calendar event for the user.",
-            "paramenters":{
+            "parameters":{
                 "type": "object",
                 "properties":{
                 "title": {"type": "string"},
