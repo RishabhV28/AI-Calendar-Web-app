@@ -5,6 +5,7 @@ So far I've
 - added basic crud functionality. 
 - Tested the api using Swagger UI
 - Added Google Auth
+- Working chat functionality using groq api
 
 
 
